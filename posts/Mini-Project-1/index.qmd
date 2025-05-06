@@ -1,0 +1,403 @@
+---
+title: "Mini Project 1"
+date: "01-29-2025"
+author: "Clayton Fogler"
+---
+
+#### "I have followed all rules for collaboration for this project, and I have not used generative AI on this project" \~ *Clayton Fogler*
+
+```{r}
+library(tidyverse)
+## create population graphs
+
+norm_df <- tibble(x = seq(3, 17, length.out = 1000),
+                  dens = dnorm(x, mean = 10, sd = 2),
+                  pop = "normal(10, 4)")
+unif_df <- tibble(x = seq(7, 13, length.out = 1000),
+                  dens = dunif(x, 7, 13),
+                  pop = "uniform(7, 13)")
+exp_df <- tibble(x = seq(0, 10, length.out = 1000),
+                 dens = dexp(x, 0.5),
+                 pop = "exp(0.5)")
+beta_df <- tibble(x = seq(0, 1, length.out = 1000),
+                  dens = dbeta(x, 8, 2),
+                  pop = "beta(8, 2)")
+
+pop_plot <- bind_rows(norm_df, unif_df, exp_df, beta_df) |>
+  mutate(pop = fct_relevel(pop, c("normal(10, 4)", "uniform(7, 13)",
+                                  "exp(0.5)", "beta(8, 2)")))
+
+ggplot(data = pop_plot, aes(x = x, y = dens)) +
+  geom_line() +
+  theme_minimal() +
+  facet_wrap(~ pop, nrow = 1, scales = "free") +
+  labs(title = "Population Distributions for Each Simulation Setting")
+```
+
+## Normal Distribution, mu = 10, sigma\^2
+
+#### Sample Minimum
+
+```{r}
+n <- 5 # sample size
+mu <- 10 # population mean
+sigma <- 2 # population standard deviation
+generate_samp_min <- function(mu, sigma, n) {
+single_sample <- rnorm(n, mu, sigma)
+sample_min <- min(single_sample)
+return(sample_min)
+}
+## test function once:
+generate_samp_min(mu = mu, sigma = sigma, n = n)
+nsim <- 5000 # number of simulations
+## code to map through the function.
+## the \(i) syntax says to just repeat the generate_samp_min function
+## nsim times
+mins <- map_dbl(1:nsim, \(i) generate_samp_min(mu = mu, sigma = sigma, n = n))
+## print some of the 5000 mins
+## each number represents the sample min from __one__ sample.
+mins_df <- tibble(mins)
+mins_df
+ggplot(data = mins_df, aes(x = mins)) +
+geom_histogram(colour = "deeppink4", fill = "deeppink1", bins = 20) +
+theme_minimal() +
+labs(x = "Observed Sample Mins",
+title = paste("Sampling Distribution of the \nSample Min when n =", n))
+```
+
+```{r}
+mins_df |>
+summarise(min_samp_dist = mean(mins),
+var_samp_dist = var(mins),
+sd_samp_dist = sd(mins))
+```
+
+#### Sample Maximum
+
+```{r}
+n <- 5 # sample size
+mu <- 10 # population mean
+sigma <- 2 # population standard deviation
+generate_samp_max <- function(mu, sigma, n) {
+single_sample <- rnorm(n, mu, sigma)
+sample_max <- max(single_sample)
+return(sample_max)
+}
+## test function once:
+generate_samp_max(mu = mu, sigma = sigma, n = n)
+nsim <- 5000 # number of simulations
+## code to map through the function.
+## the \(i) syntax says to just repeat the generate_samp_max function
+## nsim times
+maxs <- map_dbl(1:nsim, \(i) generate_samp_max(mu = mu, sigma = sigma, n = n))
+## print some of the 5000 maxs
+## each number represents the sample max from __one__ sample.
+maxs_df <- tibble(maxs)
+maxs_df
+ggplot(data = maxs_df, aes(x = maxs)) +
+geom_histogram(colour = "deeppink4", fill = "deeppink1", bins = 20) +
+theme_minimal() +
+labs(x = "Observed Sample Maxs",
+title = paste("Sampling Distribution of the \nSample Max when n =", n))
+```
+
+```{r}
+maxs_df |>
+summarise(max_samp_dist = mean(maxs),
+var_samp_dist = var(maxs),
+sd_samp_dist = sd(maxs))
+```
+
+## Uniform Distribution: theta1 = 7, theta2 = 13
+
+#### Sample Minimum
+
+```{r}
+n <- 5 # sample size
+theta1 <- 7
+theta2 <- 13
+mu <- (theta1 + theta2)/2 # population mean
+sigma <- ((theta2 - theta1) ^ 2) / 12 # population standard deviation
+generate_samp_min <- function(theta1 = theta1, theta2 = theta2, n = n) {
+single_sample <- runif(n, theta1, theta2)
+sample_min <- min(single_sample)
+return(sample_min)
+}
+## test function once:
+generate_samp_min(theta1 = theta1, theta2 = theta2, n = n)
+nsim <- 5000 # number of simulations
+## code to map through the function.
+## the \(i) syntax says to just repeat the generate_samp_min function
+## nsim times
+mins <- map_dbl(1:nsim, \(i) generate_samp_min(theta1 = theta1, theta2 = theta2, n = n))
+## print some of the 5000 mins
+## each number represents the sample min from __one__ sample.
+mins_df <- tibble(mins)
+mins_df
+ggplot(data = mins_df, aes(x = mins)) +
+geom_histogram(colour = "deeppink4", fill = "deeppink1", bins = 20) +
+theme_minimal() +
+labs(x = "Observed Sample Mins",
+title = paste("Sampling Distribution of the \nSample Min when n =", n))
+```
+
+```{r}
+mins_df |>
+summarise(min_samp_dist = mean(mins),
+var_samp_dist = var(mins),
+sd_samp_dist = sd(mins))
+```
+
+#### Sample Maximum
+
+```{r}
+n <- 5 # sample size
+theta1 <- 7
+theta2 <- 13
+mu <- (theta1 + theta2)/2 # population mean
+sigma <- ((theta2 - theta1) ^ 2) / 12 # population standard deviation
+generate_samp_max <- function(theta1 = theta1, theta2 = theta2, n = n) {
+single_sample <- runif(n, theta1, theta2)
+sample_max <- max(single_sample)
+return(sample_max)
+}
+## test function once:
+generate_samp_max(theta1 = theta1, theta2 = theta2, n = n)
+nsim <- 5000 # number of simulations
+## code to map through the function.
+## the \(i) syntax says to just repeat the generate_samp_max function
+## nsim times
+maxs <- map_dbl(1:nsim, \(i) generate_samp_max(theta1 = theta1, theta2 = theta2, n = n))
+## print some of the 5000 mins
+## each number represents the sample max from __one__ sample.
+maxs_df <- tibble(maxs)
+maxs_df
+ggplot(data = maxs_df, aes(x = maxs)) +
+geom_histogram(colour = "deeppink4", fill = "deeppink1", bins = 20) +
+theme_minimal() +
+labs(x = "Observed Sample Maxs",
+title = paste("Sampling Distribution of the \nSample Max when n =", n))
+```
+
+```{r}
+maxs_df |>
+summarise(max_samp_dist = mean(maxs),
+var_samp_dist = var(maxs),
+sd_samp_dist = sd(maxs))
+```
+
+## Exponential Distribution, lambda = 0.5
+
+#### Sample Minimum
+
+```{r}
+n <- 5 # sample size
+lambda <- 0.5
+mu <- 1 / lambda # population mean
+sigma <- sqrt(1/lambda ^ 2) # population standard deviation
+generate_samp_min <- function(lambda = lambda, n = n) {
+single_sample <- rexp(n, lambda)
+sample_min <- min(single_sample)
+return(sample_min)
+}
+## test function once:
+generate_samp_min(lambda = lambda, n = n)
+nsim <- 5000 # number of simulations
+## code to map through the function.
+## the \(i) syntax says to just repeat the generate_samp_min function
+## nsim times
+mins <- map_dbl(1:nsim, \(i) generate_samp_min(lambda = lambda, n = n))
+## print some of the 5000 mins
+## each number represents the sample min from __one__ sample.
+mins_df <- tibble(mins)
+mins_df
+ggplot(data = mins_df, aes(x = mins)) +
+geom_histogram(colour = "deeppink4", fill = "deeppink1", bins = 20) +
+theme_minimal() +
+labs(x = "Observed Sample Mins",
+title = paste("Sampling Distribution of the \nSample Min when n =", n))
+```
+
+```{r}
+mins_df |>
+summarise(min_samp_dist = mean(mins),
+var_samp_dist = var(mins),
+sd_samp_dist = sd(mins))
+```
+
+#### Sample Maximum
+
+```{r}
+n <- 5 # sample size
+lambda <- 0.5
+mu <- 1 / lambda # population mean
+sigma <- sqrt(1/lambda ^ 2) # population standard deviation
+generate_samp_max <- function(lambda = lambda, n = n) {
+single_sample <- rexp(n, lambda)
+sample_max <- max(single_sample)
+return(sample_max)
+}
+## test function once:
+generate_samp_max(lambda = lambda, n = n)
+nsim <- 5000 # number of simulations
+## code to map through the function.
+## the \(i) syntax says to just repeat the generate_samp_max function
+## nsim times
+maxs <- map_dbl(1:nsim, \(i) generate_samp_max(lambda = lambda, n = n))
+## print some of the 5000 maxs
+## each number represents the sample max from __one__ sample.
+maxs_df <- tibble(maxs)
+maxs_df
+ggplot(data = maxs_df, aes(x = maxs)) +
+geom_histogram(colour = "deeppink4", fill = "deeppink1", bins = 20) +
+theme_minimal() +
+labs(x = "Observed Sample Maxs",
+title = paste("Sampling Distribution of the \nSample Max when n =", n))
+```
+
+```{r}
+maxs_df |>
+summarise(max_samp_dist = mean(maxs),
+var_samp_dist = var(maxs),
+sd_samp_dist = sd(maxs))
+```
+
+## Beta Distribution, alpha = 8, beta = 2
+
+#### Sample Minimum
+
+```{r}
+n <- 5 # sample size
+alpha <- 8
+beta <- 2
+mu <- alpha / (alpha + beta) # population mean
+sigma <- (alpha * beta) / ((alpha + beta) ^ 2 * (alpha + beta + 1)) # population standard deviation
+generate_samp_min <- function(alpha, beta, n) {
+single_sample <- rbeta(n, alpha, beta)
+sample_min <- min(single_sample)
+return(sample_min)
+}
+## test function once:
+generate_samp_min(alpha = alpha, beta = beta, n = n)
+nsim <- 5000 # number of simulations
+## code to map through the function.
+## the \(i) syntax says to just repeat the generate_samp_min function
+## nsim times
+mins <- map_dbl(1:nsim, \(i) generate_samp_min(alpha = alpha, beta = beta, n = n))
+## print some of the 5000 mins
+## each number represents the sample min from __one__ sample.
+mins_df <- tibble(mins)
+mins_df
+ggplot(data = mins_df, aes(x = mins)) +
+geom_histogram(colour = "deeppink4", fill = "deeppink1", bins = 20) +
+theme_minimal() +
+labs(x = "Observed Sample Mins",
+title = paste("Sampling Distribution of the \nSample Min when n =", n))
+```
+
+```{r}
+mins_df |>
+summarise(min_samp_dist = mean(mins),
+var_samp_dist = var(mins),
+sd_samp_dist = sd(mins))
+```
+
+#### Sample Maximum
+
+```{r}
+n <- 5 # sample size
+alpha <- 8
+beta <- 2
+mu <- alpha / (alpha + beta) # population mean
+sigma <- (alpha * beta) / ((alpha + beta) ^ 2 * (alpha + beta + 1)) # population standard deviation
+generate_samp_max <- function(alpha, beta, n) {
+single_sample <- rbeta(n, alpha, beta)
+sample_max <- max(single_sample)
+return(sample_max)
+}
+## test function once:
+generate_samp_max(alpha = alpha, beta = beta, n = n)
+nsim <- 5000 # number of simulations
+## code to map through the function.
+## the \(i) syntax says to just repeat the generate_samp_max function
+## nsim times
+maxs <- map_dbl(1:nsim, \(i) generate_samp_max(alpha = alpha, beta = beta, n = n))
+## print some of the 5000 maxs
+## each number represents the sample max from __one__ sample.
+maxs_df <- tibble(maxs)
+maxs_df
+ggplot(data = maxs_df, aes(x = maxs)) +
+geom_histogram(colour = "deeppink4", fill = "deeppink1", bins = 20) +
+theme_minimal() +
+labs(x = "Observed Sample Maxs",
+title = paste("Sampling Distribution of the \nSample Max when n =", n))
+```
+
+```{r}
+maxs_df |>
+summarise(max_samp_dist = mean(maxs),
+var_samp_dist = var(maxs),
+sd_samp_dist = sd(maxs))
+```
+
+|   | $\text{N}(\mu = 10, \sigma^2 = 4)$ | $\text{Unif}(\theta_1 = 7, \theta_2 = 13)$ | $\text{Exp}(\lambda = 0.5)$ | $\text{Beta}(\alpha = 8, \beta = 2)$ |
+|:--:|:--:|:--:|:--:|:--:|
+| $\text{E}(Y_{min})$ | 7.66 | 8.01 | 0.40 | 0.65 |
+| $\text{E}(Y_{max})$ | 12.32 | 12.01 | 4.56 | 0.92 |
+|  |  |  |  |  |
+| $\text{SE}(Y_{min})$ | 1.36 | 0.84 | 0.40 | 0.11 |
+| $\text{SE}(Y_{max})$ | 1.34 | 0.85 | 2.41 | 0.46 |
+
+## Follow Up Questions
+
+#### Question 1: Briefly summarise how SE(Ymin) and SE(Ymax) compare for each of the above population models. Can you propose a general rule or result for how SE(Ymin) and SE(Ymax) compare for a given population?
+
+-   For both Normal and uniform distributions, the SE for both Ymin and Ymax are very similar. This is no suprise because both of the distributions are "even", meaning if you draw a line down the middle, they would be identical on both sides. Because of this, you would expect the SE to be the same on both ends. A general rule for these two would be you only need to find the SE for one of the two, and then once you find it you know the SE for both.
+
+-   Now, for Exponential and Beta distributions, the SE(Ymin) was different than the SE(Ymax). Why is this the case? Well, for exponential, the SE(Ymin) was small because when you look at the graph, it is not spread out. On the other hand, SE(Ymax) is much bigger. This makes sense because on the max side, y is approaching 0, which gives the max a wide range. This is a similar case for the beta distribution, however, the SE(Ymax) is small while the SE(Ymin) is large. The only general rule I could think of is the end that approaches 0 will have a larger SE than the end that does not approach 0.
+
+#### Question 2: Choose either the third (Exponential) or fourth (beta) population model from the table above. For that population model, find the pdf of Ymin and Ymax, and, for each of those random variables, sketch the pdfs and use integration to calculate the expected value and standard error. What do you notice about how your answers compare to the simulated answers? Some code it given below to help you plot the pdfs in R:
+
+-   Using the exponential population model, To find the pdf for Ymin and Ymax, we start with finding the cdf. We can do this by finding the integral from o to x of 0.5e \^ (-0.5y) dy which is equal to 1 - e \^ (-0.5y). With this, we can now find:
+
+    -   fmin(y) = 5(1 - (1 - e \^ (-0.5x))) \^ 4 \* 0.5e \^ (-0.5x)
+    -   fmax(y) = 5(1 - e \^ (-0.5x)) \^ 4 \* 0.5e \^ (-0.5x)
+
+```{r}
+n <- 5
+## CHANGE 0 and 3 to represent where you want your graph to start and end
+## on the x-axis
+x <- seq(0, 3, length.out = 1000)
+## CHANGE to be the pdf you calculated. Note that, as of now, 
+## this is not a proper density (it does not integrate to 1).
+density <- n * (1 - (1 - exp(1) ^ (-0.5 * x))) ^ n - 1 * 0.5 * exp(1) ^ (-0.5 * x)
+
+
+## put into tibble and plot
+samp_min_df <- tibble(x, density)
+ggplot(data = samp_min_df, aes(x = x, y = density)) +
+  geom_line() +
+  theme_minimal()
+```
+
+```{r}
+n <- 5
+## CHANGE 0 and 3 to represent where you want your graph to start and end
+## on the x-axis
+x <- seq(4, 7, length.out = 1000)
+## CHANGE to be the pdf you calculated. Note that, as of now, 
+## this is not a proper density (it does not integrate to 1).
+density <-  n * (1 - exp(1) ^ (-0.5 * x))  ^ n - 1 * 0.5 * exp(1) ^ (-0.5 * x)
+
+
+## put into tibble and plot
+samp_min_df <- tibble(x, density)
+ggplot(data = samp_min_df, aes(x = x, y = density)) +
+  geom_line() +
+  theme_minimal()
+```
+
+-   Theoretical: E(Ymin) and SE(Ymin)
+    -   To find the E(Ymin), we calculate the integral from 0 to infinity of x \* 5(1 - (1 - e \^ (-0.5x))) \^ 4 \* 0.5e \^ (-0.5x). We get 0.4. This is very very close to our simulated E(Ymin). For SE(Ymin), we must calculate the Var(Ymin). We calculate the integral from 0 to infinity of x\^2 \* 5(1 - (1 - e \^ (-0.5y))) \^ 4 \* 0.5e \^ (-0.5y). We get 0.32. We then use this to do 0.32 - (0.4)\^2 = 0.16. When we take the square root of 0.16, we get the SE(Ymin) = 0.4. This is very similar to our simulated SE(Ymin).
+-   Theoretical: E(Ymax) and SE(Ymax)
+    -   To find the E(Ymax), we calculate the integral from 0 to infinity of x \* 5(1 - e \^ (-0.5x)) \^ 4 \* 0.5e \^ (-0.5x). We get 4.5666. This is very very close to our simulated E(Ymax). For SE(Ymax), we must calculate the Var(Ymax). We calculate the integral from 0 to infinity of x\^2 \* 5(1 - e \^ (-0.5x)) \^ 4 \* 0.5e \^ (-0.5x). We get 26.7088. We then use this to do 26.7088 - (4.5666)\^2 = 5.855. When we take the square root of 5.855, we get the SE(Ymax) = 2.4197. This is very similar to our simulated SE(Ymax).

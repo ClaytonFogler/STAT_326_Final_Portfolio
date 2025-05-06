@@ -1,0 +1,39 @@
+---
+title: "Mini Project 5"
+date: "2025-04-28"
+author: "Clayton Fogler"
+---
+
+“All work presented is my own, and I have followed all rules for collaboration. I have not used generative AI on this project.” \~ Clayton Fogler
+
+Questions:
+
+1)  Towards the end of Section 1, the authors say “As ‘statistical significance’ is used less, statistical thinking will be used more.” Elaborate on what you think the authors mean. Give some examples of what you think embodies “statistical thinking.”
+
+-   *I think what the author is trying to get at her is instead of viewing p = 0.049 and p 0.051 differently, statisticians will use more statistical thinking to come up with their conclusions. This means using variability, prior knowledge, and other information to come up with conclusions instead of just looking at a p value. Some examples that embody “statistical thinking” include using confidence intervals to also assess the problem, looking at the limitations of the data we have gathered, and looking at the real life impact our findings may have instead of just making a judgment based off a p value.*
+
+2)  Section 2, third paragraph: The authors state “A label of statistical significance adds nothing to what is already conveyed by the value of p; in fact, this dichotomization of p-values makes matters worse.” Elaborate on what you think the authors means.
+
+-   *The author is trying to say is that taking a number such as a p-value and just assigning it to either statistically significant or not statistically significant is oversimplifying what the p-value stands for. In a situation where you get p = 0.049, since it is \< 0.05, you would report the p value as being statistically significant, even though it is so close to the cut line. On the other hand, if you got a p value of 0.051, you are technically over the 0.05 threshold and therefore not statistically significant. In other words, you get this dichotomization where we are deciding statistical significance based on a 1000th decimal point. Instead, we should just look at the p value and judge the results from there instead of splitting into significant or not significant.*
+
+3)  Section 2, end of first column: The authors state “For the integrity of scientific publishing and research dissemination, therefore, whether a p-value passes any arbitrary threshold should not be considered at all when deciding which results to present or highlight.” Do you agree or disagree? How should it be decided which results to present/highlight in scientific publishing?
+
+-   *Yes, I agree. You should not let a p value of 0.051 vs a p value of 0.049 be the difference whether you present your findings. Sort of like question two, we shouldn't let a threshold withhold us from presenting what could still be very useful findings. Instead, deciding whether or not to present or highlight results should be based off statistical thinking. Use other statistics such as confidence intervals that can still provide useful findings.*
+
+4)  Section 3, end of page 2: The authors state “The statistical community has not yet converged on a simple paradigm for the use of statistical inference in scientific research – and in fact it may never do so. A one-size-fits-all approach to statistical inference is an inappropriate expectation.” Do you agree or disagree? Explain.
+
+-   *I 100 percent agree. If one person is trying to test a new medicine for a cure and another person is trying to test whether a school's favorite color is anything different than red, they should not be using the same approach to statistical inference. One situation could be life and death and needs a ton more attention while the other situation is just dealing with what a person's favorite color is. To use a single one-size-fits-all approach would be irresponsible for statistical inference.*
+
+5)  Section 3.2: The authors note that they are envisioning “a sort of ‘statistical thoughtfulness’.” What do you think “statistical thoughtfulness” means? What are some ways to demonstrate “statistical thoughtfulness” in an analysis?
+
+-   *I would say statistical thoughtfulness refers to thinking outside of the box. Instead of going into research with a goal in mind of finding a specific result, you approach your topic from all angles using multiple different tests to take out any bias you may have towards the results and instead let the results speak for themselves. For example, if I was an analyst for a sports team, I wouldn’t just look for results that are in our favor, I would make sure to use a rounded approach and get all positive and negative results to make my assumptions.*
+
+6)  Section 3.2.4: A few of the authors of papers in this special issue argue that some of the terminology used in statistics, such as “significance” and “confidence” can be misleading, and they propose the use of “compatibility” instead. What you do you think they believe the problem is? Do you agree or disagree (that there is a problem and that changing the name will help)?
+
+-   *I think that the authors believe there is a misunderstanding when statisticians use words such as significance and confidence. When a non-statistics person hears the word significance, they kind of just assume that it means the truth or real, but it really only means there is evidence that it could be true, not that it is. The same can be said about confidence. When a non-statistician hears the 95% confidence interval of Aaron Judges batting average is (0.314, 0.421), they assume that it means there is a 95% probability that Aaron Judge’s batting average is between 0.314 and 0.421. However, the probability of Aaron Judges batting average being between 0.314 and 0.421 is either 0 or 1 (it is either in between or not). Instead, what a confidence interval says is we are 95% confident that the true mean of Aaron Judge’s batting average is between 0.314 and 0.421. I do agree that there is this issue, and it is misleading, however, I don’t think that just inventing a new term called compatibility makes it better. Instead, there needs to be an emphasis on learning how to share statistical research with those not fully knowledgeable about statistical terms and references. Creating a new term for non-statistical people to misunderstand is not a solution.*
+
+7)  Find a quote or point that really strikes you (i.e., made you think). What is the quote (and tell me where to find it), and why does it stand out to you?
+
+-   
+
+    ## *A quote that stands out is “We summarize our recommendations in two sentences totaling seven words: ‘Accept uncertainty. Be thoughtful, open, and modest.’ Remember ‘ATOM’” (Section 3, bottom right of page 2). The reason this quote stands out to me is because this one quote really captures what the whole reading is about. Don’t have this dichotomized thought process where the answer is either a or b. Accept that there will be uncertainty in what the answer may be. Look at the problem from all angles. Be open to being wrong or right. If I forget everything I read today, I hope I can at least remember “ATOM”.*

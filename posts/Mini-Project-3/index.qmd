@@ -1,0 +1,328 @@
+---
+title: "Mini Project 3"
+date: "03-05-25"
+author: "Clayton Fogler"
+---
+
+# Mini Project 3: Simulation to Investigate Confidence Intervals
+
+#### Statement of Integrity
+
+“I have followed all rules for collaboration for this project, and I have not used generative AI on this project.”
+
+#### packages for this project
+
+```{r}
+library(dplyr)
+library(purrr)
+```
+
+## Step 1:
+
+n = 5, n = 20, n = 50
+
+p = 0.46, p = 0.75
+
+-   Note: These 3 different sample sizes and 2 different population proportions meets the requirments in which at least two of the six settings violate the large sample assumption for the asymptotic confidence interval while two of the six settings hold the assumption.
+
+## Step 2: Starting with one of the setting that holds the large sample assumption, construct at least 5,000 sample proportions and 5000 associated confidence intervals
+
+#### n = 50, p = 0.46
+
+1)  This assumption holds since np \> 10 and n(1-p) \> 10
+
+```{r}
+50*0.46
+50*(1-0.46)
+```
+
+2)  Constructing 5,000 sample proportions and 5000 associated C.I.
+
+```{r}
+generate_onesamp_cis <- function(n, p, alpha) {
+  
+  ## generate a single sample (one of nsim data sets)
+  x <- rbinom(1, n, p)
+  
+  ## compute the bounds of the C.I.
+  point_est <- x/n
+  lb <- point_est - qnorm(1 - alpha / 2) * sqrt(point_est * (1 - point_est)/ n)
+  ub <- point_est + qnorm(1 - alpha / 2) * sqrt(point_est * (1 - point_est)/ n)
+  
+  ## put everything into a tibble
+  out_df <- tibble(point_est, lb, ub)
+  
+  return(out_df)
+}
+```
+
+```{r}
+## define parameters to use in our function
+n <- 50 # sample size
+p <- 0.46
+alpha <- 0.1 # used to construct 1 -alpha CI (how much should be in the tails)
+
+## generate 5000 sample proportions and 5000 associated C.I.
+nsim <- 5000 # the number of simulations
+
+many_ci_df <- map(1:nsim,
+                  \(i) generate_onesamp_cis(n = n, p = p, alpha = alpha)) |>
+  bind_rows()
+many_ci_df
+```
+
+## Step 3: From the 5000 confidence intervals, calculate both 1) the average interval width and 2) the coverage rate.
+
+```{r}
+## this code will calculate both 1) interval width and 2) the coverage rate for all 5000 simulations
+
+many_ci_df <- many_ci_df |> mutate(ci_width = ub - lb,
+                                    ci_cover_ind = if_else(p > lb & p < ub,
+                                                           true = 1,
+                                                           false = 0))
+```
+
+```{r}
+## this code will calculate both 1) average interval width and 2) average coverage rate for the 5000 simulations
+
+many_ci_df |> summarise(avg_width = mean(ci_width),
+                        coverage_rate = mean(ci_cover_ind))
+```
+
+## Step 4: Repeat steps 2 and 3 for the 5 other settings, recording the average interval width and the coverage rate for each of these other 5 settings.
+
+#### n = 50, p = 0.75
+
+This assumption holds since np \> 10 and n(1-p) \> 10
+
+```{r}
+50*0.75
+50*(1-0.75)
+```
+
+```{r}
+## define parameters to use in our function
+n <- 50 # sample size
+p <- 0.75
+alpha <- 0.1 # used to construct 1 -alpha CI (how much should be in the tails)
+
+## generate 5000 sample proportions and 5000 associated C.I.
+nsim <- 5000 # the number of simulations
+
+many_ci_df <- map(1:nsim,
+                  \(i) generate_onesamp_cis(n = n, p = p, alpha = alpha)) |>
+  bind_rows()
+many_ci_df
+```
+
+```{r}
+## this code will calculate both 1) interval width and 2) the coverage rate for all 5000 simulations
+
+many_ci_df <- many_ci_df |> mutate(ci_width = ub - lb,
+                                    ci_cover_ind = if_else(p > lb & p < ub,
+                                                           true = 1,
+                                                           false = 0))
+```
+
+```{r}
+## this code will calculate both 1) average interval width and 2) average coverage rate for the 5000 simulations
+
+many_ci_df |> summarise(avg_width = mean(ci_width),
+                        coverage_rate = mean(ci_cover_ind))
+```
+
+------------------------------------------------------------------------
+
+#### n = 5, p = 0.46
+
+This assumption does not hold since np \> 10 and n(1-p) \> 10 are both not true
+
+```{r}
+5*0.46
+5*(1-0.46)
+```
+
+```{r}
+## define parameters to use in our function
+n <- 5 # sample size
+p <- 0.46
+alpha <- 0.1 # used to construct 1 -alpha CI (how much should be in the tails)
+
+## generate 5000 sample proportions and 5000 associated C.I.
+nsim <- 5000 # the number of simulations
+
+many_ci_df <- map(1:nsim,
+                  \(i) generate_onesamp_cis(n = n, p = p, alpha = alpha)) |>
+  bind_rows()
+many_ci_df
+```
+
+```{r}
+## this code will calculate both 1) interval width and 2) the coverage rate for all 5000 simulations
+
+many_ci_df <- many_ci_df |> mutate(ci_width = ub - lb,
+                                    ci_cover_ind = if_else(p > lb & p < ub,
+                                                           true = 1,
+                                                           false = 0))
+```
+
+```{r}
+## this code will calculate both 1) average interval width and 2) average coverage rate for the 5000 simulations
+
+many_ci_df |> summarise(avg_width = mean(ci_width),
+                        coverage_rate = mean(ci_cover_ind))
+```
+
+------------------------------------------------------------------------
+
+#### n = 5, p = 0.75
+
+This assumption does not hold since np \> 10 and n(1-p) \> 10 are both not true
+
+```{r}
+5*0.75
+5*(1-0.75)
+```
+
+```{r}
+## define parameters to use in our function
+n <- 5 # sample size
+p <- 0.75
+alpha <- 0.1 # used to construct 1 -alpha CI (how much should be in the tails)
+
+## generate 5000 sample proportions and 5000 associated C.I.
+nsim <- 5000 # the number of simulations
+
+many_ci_df <- map(1:nsim,
+                  \(i) generate_onesamp_cis(n = n, p = p, alpha = alpha)) |>
+  bind_rows()
+many_ci_df
+```
+
+```{r}
+## this code will calculate both 1) interval width and 2) the coverage rate for all 5000 simulations
+
+many_ci_df <- many_ci_df |> mutate(ci_width = ub - lb,
+                                    ci_cover_ind = if_else(p > lb & p < ub,
+                                                           true = 1,
+                                                           false = 0))
+```
+
+```{r}
+## this code will calculate both 1) average interval width and 2) average coverage rate for the 5000 simulations
+
+many_ci_df |> summarise(avg_width = mean(ci_width),
+                        coverage_rate = mean(ci_cover_ind))
+```
+
+------------------------------------------------------------------------
+
+#### n = 20, p = 0.46
+
+This assumption does not hold since np \> 10 and n(1-p) \> 10 are not both true
+
+```{r}
+20*0.46
+20*(1-0.46)
+```
+
+```{r}
+## define parameters to use in our function
+n <- 20 # sample size
+p <- 0.46
+alpha <- 0.1 # used to construct 1 -alpha CI (how much should be in the tails)
+
+## generate 5000 sample proportions and 5000 associated C.I.
+nsim <- 5000 # the number of simulations
+
+many_ci_df <- map(1:nsim,
+                  \(i) generate_onesamp_cis(n = n, p = p, alpha = alpha)) |>
+  bind_rows()
+many_ci_df
+```
+
+```{r}
+## this code will calculate both 1) interval width and 2) the coverage rate for all 5000 simulations
+
+many_ci_df <- many_ci_df |> mutate(ci_width = ub - lb,
+                                    ci_cover_ind = if_else(p > lb & p < ub,
+                                                           true = 1,
+                                                           false = 0))
+```
+
+```{r}
+## this code will calculate both 1) average interval width and 2) average coverage rate for the 5000 simulations
+
+many_ci_df |> summarise(avg_width = mean(ci_width),
+                        coverage_rate = mean(ci_cover_ind))
+```
+
+------------------------------------------------------------------------
+
+#### n = 20, p = 0.75
+
+This assumption does not hold since np \> 10 and n(1-p) \> 10 are not both true.
+
+```{r}
+20*0.75
+20*(1-0.75)
+```
+
+```{r}
+## define parameters to use in our function
+n <- 20 # sample size
+p <- 0.75
+alpha <- 0.1 # used to construct 1 -alpha CI (how much should be in the tails)
+
+## generate 5000 sample proportions and 5000 associated C.I.
+nsim <- 5000 # the number of simulations
+
+many_ci_df <- map(1:nsim,
+                  \(i) generate_onesamp_cis(n = n, p = p, alpha = alpha)) |>
+  bind_rows()
+many_ci_df
+```
+
+```{r}
+## this code will calculate both 1) interval width and 2) the coverage rate for all 5000 simulations
+
+many_ci_df <- many_ci_df |> mutate(ci_width = ub - lb,
+                                    ci_cover_ind = if_else(p > lb & p < ub,
+                                                           true = 1,
+                                                           false = 0))
+```
+
+```{r}
+## this code will calculate both 1) average interval width and 2) average coverage rate for the 5000 simulations
+
+many_ci_df |> summarise(avg_width = mean(ci_width),
+                        coverage_rate = mean(ci_cover_ind))
+```
+
+------------------------------------------------------------------------
+
+## Table with all of our calculations:
+
+|            |               | n = 5  | n = 20 | n = 50 |
+|:----------:|:-------------:|:------:|:------:|:------:|
+| $p = 0.46$ | Coverage Rate | 0.8048 | 0.8812 | 0.8812 |
+| $p = 0.75$ | Coverage Rate | 0.7474 | 0.8626 | 0.8774 |
+|            |               |        |        |        |
+| $p = 0.46$ | Average Width | 0.6275 | 0.3571 | 0.2295 |
+| $p = 0.75$ | Average Width | 0.4950 | 0.3065 | 0.1987 |
+
+: Table of Results {.striped .hover}
+
+------------------------------------------------------------------------
+
+## Summary of our Findings
+
+Our findings can be broken into three different sample size: n = 5, n = 20, and n = 50.
+
+First, n = 5. Whether p = 0.46 or p = 0.75, they both did not hold the "large sample assumption". After the 5000 simulations, when p = 0.46, we got an average width of 0.6275 and coverage rate of 0.8048. We are not surprised that the average width is big because our n is so small. Our converge rate is roughly about 0.80, which is not what we wanted since we are doing a 90% C.I.This can be explained because with such a small n, our phats are ending up outside our confidence interval. When p = 0.75, we got an average width of 0.4950 and a coverage rate of 0.7474. Again, we are not surprised by the big interval and smaller than expected coverage rate due to the fact we have a small n and did not hold the "large sample assumption".
+
+When n = 20, we still saw that it didn't matter what our p was. Whether it was 0.46 or 0.75, the "large sample assumption" still does not hold. After the 5000 simulations, when p = 0.46, the average width was 0.3571 and coverage rate of 0.8812. We notice that our average width of the confidence interval has decreased from n = 5, which makes sense as a larger sample size should give us a smaller confidence interval. We also notice that our coverage rate was closer to the 0.9 we are looking for. This coverage rate was much closer due to the fact that one of the two test did pass, with one of the test being very close to passing. When p = 0.75, we get an average width of 0.3065 and a coverage rate of 0.8626. Again, like the p = 0.46, we noticed improved numbers as our confidence interval was smaller and our coverage rate was much closer to 0.9 then when n = 5.
+
+Finally, when n = 50, we saw that when our p = 0.46 or p = 0.75, the "large sample assumption" passed. When p = 0.46, we got an average width of 0.2295 and a coverage rate of 0.8812. We notice again as we increased n, we obtain an even smaller average width and a coverage rate of almost 0.90 This is great as this is what we expect when trying to take a 90% C.I. We get very similar results when p = 0.75 as average width was 0.1987 (the smallest out of all 6 examples) and a coverage rate of 0.8774. This was the smallest average width, which was not suprising as n = 50. This was also again a very close coverage rate to 0.90 as both "large sample assumptions passed".
+
+Overall, the biggest take away from our simulations is we get the smallest average width of an interval and best coverage rate when we have a large n and pass the "large sample assumption".
